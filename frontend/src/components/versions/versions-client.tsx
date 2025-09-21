@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import type { CVData, CVTheme } from "@/lib/validations";
 
 interface VersionSnapshot {
-  template: "CLASSIC" | "MODERN" | "COMPACT";
+  template: "MODERN";
   theme: CVTheme;
   data: CVData;
 }

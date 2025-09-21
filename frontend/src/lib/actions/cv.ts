@@ -16,7 +16,7 @@ async function requireAuth() {
 // Schema for CV data validation
 const cvDataSchema = z.object({
   title: z.string().min(1),
-  template: z.enum(["CLASSIC", "MODERN", "COMPACT"]).default("MODERN"),
+  template: z.literal("MODERN").default("MODERN"),
   theme: z.object({
     font: z.string().default("Inter"),
     colors: z.object({

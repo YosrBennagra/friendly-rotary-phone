@@ -6,8 +6,8 @@ import { getDictionary } from "@/lib/i18n";
 
 const featureList = [
   {
-    title: "Templates that impress",
-    description: "Switch between classic, modern, and compact layouts with one click.",
+    title: "A template that impresses",
+    description: "Polished, recruiter-friendly Modern layout with a configurable theme.",
   },
   {
     title: "Collaborative editor",

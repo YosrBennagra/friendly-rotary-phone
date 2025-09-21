@@ -30,13 +30,13 @@ interface CVStore {
   cvId: string | null;
   data: CVData;
   theme: CVTheme;
-  template: "CLASSIC" | "MODERN" | "COMPACT";
+  template: "MODERN";
   sectionOrder: SectionKey[];
   hiddenSections: Set<SectionKey>;
   activeSection: SectionKey | null;
   isEditing: boolean;
   saveStatus: "idle" | "saving" | "saved" | "error";
-  setCv: (input: { id: string; data: CVData; theme: CVTheme; template: "CLASSIC" | "MODERN" | "COMPACT" }) => void;
+  setCv: (input: { id: string; data: CVData; theme: CVTheme; template?: "MODERN" }) => void;
   setData: (data: CVData) => void;
   updateSection: (section: SectionKey, value: CVData[SectionKey]) => void;
   updateArrayItem: (section: ArraySections, index: number, value: any) => void;
@@ -48,7 +48,8 @@ interface CVStore {
   reorderSections: (order: SectionKey[]) => void;
   toggleSection: (section: SectionKey) => void;
   setTheme: (theme: Partial<CVTheme>) => void;
-  setTemplate: (template: "CLASSIC" | "MODERN" | "COMPACT") => void;
+  // Template is fixed to 'MODERN'; no setter needed but keep a no-op for compatibility
+  setTemplate: (template: "MODERN") => void;
   setActiveSection: (section: SectionKey | null) => void;
   setIsEditing: (state: boolean) => void;
   setSaveStatus: (status: "idle" | "saving" | "saved" | "error") => void;
@@ -95,9 +96,10 @@ const defaultTheme: CVTheme = {
   fontFamily: "Inter",
   accentColor: "#3b82f6",
   spacing: "normal",
-  showIcons: true,
+  showIcons: false,
   compactMode: false,
   layout: "single",
+  atsMode: true,
   sectionOrder: DEFAULT_ORDER,
   hiddenSections: [],
 };
@@ -113,7 +115,7 @@ export const useCVStore = create<CVStore>()(
     activeSection: null,
     isEditing: false,
     saveStatus: "idle",
-    setCv: ({ id, data, theme, template }) => {
+  setCv: ({ id, data, theme, template }) => {
       const sanitizedData: CVData = {
         ...defaultData,
         ...data,
@@ -173,13 +175,22 @@ export const useCVStore = create<CVStore>()(
         })),
       } as CVData;
 
+      // Normalize theme to ensure required keys (e.g., accentColor) are always present
+      const themeNormalized: CVTheme = {
+        ...defaultTheme,
+        ...(theme as any),
+        // Force ATS constraints: no icons and single column for consistency
+        showIcons: false,
+        layout: "single",
+      };
+
       set({
         cvId: id,
         data: sanitizedData,
-        theme,
-        template,
-        sectionOrder: (theme.sectionOrder as SectionKey[] | undefined) ?? DEFAULT_ORDER,
-        hiddenSections: new Set((theme.hiddenSections as SectionKey[] | undefined) ?? []),
+        theme: themeNormalized,
+  template: "MODERN",
+        sectionOrder: (themeNormalized.sectionOrder as SectionKey[] | undefined) ?? DEFAULT_ORDER,
+        hiddenSections: new Set((themeNormalized.hiddenSections as SectionKey[] | undefined) ?? []),
       });
     },
     setData: (data) => set({ data }),
@@ -311,7 +322,7 @@ export const useCVStore = create<CVStore>()(
         };
       });
     },
-    setTemplate: (template) => set({ template }),
+  setTemplate: (_template) => set({ template: "MODERN" }),
     setActiveSection: (section) => set({ activeSection: section }),
     setIsEditing: (isEditing) => set({ isEditing }),
     setSaveStatus: (saveStatus) => set({ saveStatus }),

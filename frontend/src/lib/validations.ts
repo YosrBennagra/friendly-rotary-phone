@@ -106,23 +106,24 @@ export const cvThemeSchema = z.object({
   fontFamily: z.string().default("Inter"),
   accentColor: z.string().default("#3b82f6"),
   spacing: z.enum(["compact", "normal", "spacious"]).default("normal"),
-  showIcons: z.boolean().default(true),
+  showIcons: z.boolean().default(false),
   compactMode: z.boolean().default(false),
   layout: z.enum(["single", "double"]).default("single"),
+  atsMode: z.boolean().default(true),
   sectionOrder: z.array(z.string()).optional(),
   hiddenSections: z.array(z.string()).optional(),
 });
 
 export const createCvSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  template: z.enum(["CLASSIC", "MODERN", "COMPACT"]).default("MODERN"),
+  template: z.literal("MODERN").default("MODERN"),
   theme: cvThemeSchema.optional(),
   data: cvDataSchema.optional(),
 });
 
 export const updateCvSchema = z.object({
   title: z.string().min(1, "Title is required").optional(),
-  template: z.enum(["CLASSIC", "MODERN", "COMPACT"]).optional(),
+  template: z.literal("MODERN").optional(),
   theme: cvThemeSchema.optional(),
   data: cvDataSchema.optional(),
   isPublic: z.boolean().optional(),

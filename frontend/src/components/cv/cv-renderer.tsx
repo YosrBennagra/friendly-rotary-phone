@@ -1,28 +1,18 @@
 'use client'
 
 import { CVData, CVTheme } from '@/lib/validations'
-import { ClassicTemplate } from './templates/classic'
 import { ModernTemplate } from './templates/modern'
-import { CompactTemplate } from './templates/compact'
 
 interface CVRendererProps {
   data: CVData
   theme: CVTheme
-  template: 'CLASSIC' | 'MODERN' | 'COMPACT'
+  // Kept for backwards compatibility with callers; ignored since only Modern is supported
+  template?: 'MODERN'
   className?: string
+  editable?: boolean
 }
 
-export function CVRenderer({ data, theme, template, className }: CVRendererProps) {
-  const templateProps = { data, theme, className }
-
-  switch (template) {
-    case 'CLASSIC':
-      return <ClassicTemplate {...templateProps} />
-    case 'MODERN':
-      return <ModernTemplate {...templateProps} />
-    case 'COMPACT':
-      return <CompactTemplate {...templateProps} />
-    default:
-      return <ModernTemplate {...templateProps} />
-  }
+export function CVRenderer({ data, theme, className, editable }: CVRendererProps) {
+  const templateProps = { data, theme, className, editable }
+  return <ModernTemplate {...templateProps} />
 }

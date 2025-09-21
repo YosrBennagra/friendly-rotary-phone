@@ -16,7 +16,7 @@ interface PreviewClientProps {
   cv: {
     id: string;
     title: string;
-    template: "CLASSIC" | "MODERN" | "COMPACT";
+    template: "MODERN";
     theme: CVTheme;
     data: CVData;
     updatedAt: string;
@@ -34,7 +34,7 @@ export function PreviewClient({ cv }: PreviewClientProps) {
           <div className="space-y-1">
             <h1 className="text-2xl font-semibold">{cv.title}</h1>
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <Badge variant="outline">{cv.template.toLowerCase()}</Badge>
+              <Badge variant="outline">modern</Badge>
               <span>Updated {formatDistanceToNow(new Date(cv.updatedAt))} ago</span>
             </div>
           </div>
@@ -56,8 +56,8 @@ export function PreviewClient({ cv }: PreviewClientProps) {
         </CardContent>
       </Card>
 
-      <div className="rounded-lg border bg-white shadow" ref={printRef}>
-        <CVRenderer data={cv.data} theme={cv.theme} template={cv.template} className="p-8" />
+    <div className="rounded-lg border bg-white shadow" ref={printRef}>
+  <CVRenderer data={cv.data} theme={cv.theme} className="p-8" editable />
       </div>
     </div>
   );

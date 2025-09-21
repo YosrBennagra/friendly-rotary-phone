@@ -64,16 +64,8 @@
   font-family: "Inter", sans-serif;
 }
 
-.cv-template.classic {
-  @apply max-w-4xl mx-auto p-8 shadow-lg;
-}
-
 .cv-template.modern {
   @apply max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 shadow-lg;
-}
-
-.cv-template.compact {
-  @apply max-w-3xl mx-auto p-6 shadow-lg text-sm;
 }
 
 /* Rich text editor styles */

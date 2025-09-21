@@ -22,7 +22,7 @@ interface EditorClientProps {
     id: string;
     title: string;
     slug: string;
-    template: "CLASSIC" | "MODERN" | "COMPACT";
+    template: "MODERN";
     theme: CVTheme;
     data: CVData;
   };
@@ -131,9 +131,7 @@ export function EditorClient({ cv, user }: EditorClientProps) {
 
       setData(dataResult.data);
       setTheme(themeResult.data);
-      if (parsed.template) {
-        setTemplate(parsed.template);
-      }
+      // Ignore template changes; we only support MODERN
       if (parsed.title) {
         setTitle(parsed.title);
       }
