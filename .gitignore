@@ -1,41 +1,162 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies# CV Builder Workspace - Monorepo .gitignore
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
+node_modules/
+
+*/node_modules/# Dependencies
+
+.pnp/node_modules
+
+.pnp.js/frontend/node_modules
+
+/backend/node_modules
+
+# Production builds/.pnp
+
+build/.pnp.*
+
+dist/.yarn/*
+
+.next/!.yarn/patches
+
+out/!.yarn/plugins
+
 !.yarn/releases
-!.yarn/versions
 
-# testing
-/coverage
+# Environment variables!.yarn/versions
 
-# next.js
-/.next/
-/out/
+.env
 
-# production
-/build
+.env.local# Build outputs
 
-# misc
-.DS_Store
+.env.development.local/frontend/.next/
+
+.env.test.local/frontend/out/
+
+.env.production.local/backend/dist/
+
+/backend/build/
+
+# Logs
+
+npm-debug.log*# Testing
+
+yarn-debug.log*/coverage
+
+yarn-error.log*/frontend/coverage
+
+pnpm-debug.log*/backend/coverage
+
+lerna-debug.log*
+
+# Environment files
+
+# Runtime data.env*
+
+pidsfrontend/.env*
+
+*.pidbackend/.env*
+
+*.seed
+
+*.pid.lock# Logs
+
+npm-debug.log*
+
+# Coverage directory used by tools like istanbulyarn-debug.log*
+
+coverage/yarn-error.log*
+
+*.lcov.pnpm-debug.log*
+
+
+
+# nyc test coverage# Misc
+
+.nyc_output.DS_Store
+
 *.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# Dependency directories.vscode/
 
-# env files (can opt-in for committing if needed)
-.env*
+jspm_packages/.idea/
 
-# vercel
+
+
+# Optional npm cache directory# TypeScript
+
+.npm*.tsbuildinfo
+
+frontend/next-env.d.ts
+
+# Optional eslint cache
+
+.eslintcache# Vercel
+
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Microbundle cache
+
+.rpt2_cache/# Package lock files (keep main workspace lock)
+
+.rts2_cache_cjs//frontend/package-lock.json
+
+.rts2_cache_es//backend/package-lock.json
+
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database
+*.sqlite
+*.db
+
+# MongoDB
+data/
+
+# Prisma
+prisma/migrations/
