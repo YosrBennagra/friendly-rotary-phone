@@ -27,7 +27,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
         template: cv.template,
         theme: cv.theme as any,
         data: cv.data as any,
-        updatedAt: cv.updatedAt.toISOString(),
+        updatedAt: typeof cv.updatedAt === 'string' ? cv.updatedAt : new Date(cv.updatedAt).toISOString(),
       }}
     />
   );

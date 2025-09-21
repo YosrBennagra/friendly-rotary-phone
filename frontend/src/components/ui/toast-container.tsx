@@ -15,7 +15,7 @@ export function ToastContainer() {
 
   return (
     <ToastProvider>
-      {toasts.map(({ id, title, description, action }) => (
+      {(toasts ?? []).map(({ id, title, description, action }) => (
         <Toast key={id}>
           <div className="grid gap-1">
             {title ? <ToastTitle>{title}</ToastTitle> : null}

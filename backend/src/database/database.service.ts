@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
+import { MongoClient, Db, Collection, ObjectId, ServerApiVersion } from 'mongodb';
+import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 
 export interface User {
@@ -65,8 +66,36 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       throw new Error('DATABASE_NAME is not defined in environment variables');
     }
     
-    this.client = new MongoClient(mongoUri);
-    await this.client.connect();
+    // Build TLS-aware options. Some Windows/Node 22 environments require relaxing TLS verification
+    const tlsInsecure = this.configService.get<string>('MONGODB_TLS_INSECURE') === '1';
+    const caFile = this.configService.get<string>('MONGODB_CA_FILE');
+
+    const isSrv = mongoUri.startsWith('mongodb+srv://');
+    const mongoOptions: ConstructorParameters<typeof MongoClient>[1] = {
+      serverApi: ServerApiVersion.v1,
+      // Use TLS for SRV strings by default (Atlas), allow plain mongodb:// to skip TLS
+      ...(isSrv ? { tls: true } : {}),
+      // If you provide a custom CA, include it
+      ...(caFile && fs.existsSync(caFile) ? { tlsCAFile: caFile } : {}),
+      // Only set tlsAllowInvalidCertificates if explicitly requested
+      ...(tlsInsecure ? { tlsAllowInvalidCertificates: true, tlsAllowInvalidHostnames: true } : {}),
+      retryWrites: true,
+      writeConcern: { w: 'majority' },
+      readPreference: 'primary',
+      appName: 'cv-builder-backend',
+      // Reasonable selection timeout to fail fast with clear error
+      serverSelectionTimeoutMS: 20000,
+    };
+
+    this.client = new MongoClient(mongoUri, mongoOptions);
+    try {
+      await this.client.connect();
+    } catch (err) {
+      // Augment error with guidance for Windows OpenSSL/TLS quirks
+      const hint = `\nIf you're using MongoDB Atlas on Windows and see TLS errors, try setting MONGODB_TLS_INSECURE=1 in backend/.env or provide a CA via MONGODB_CA_FILE.`;
+      console.error('❌ MongoDB connection failed:', err?.message || err);
+      throw new Error(`MongoDB connection failed. ${hint}`);
+    }
     this.db = this.client.db(dbName);
     
     console.log('✅ Connected to MongoDB');

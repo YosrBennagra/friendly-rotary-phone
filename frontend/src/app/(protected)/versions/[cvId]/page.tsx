@@ -32,7 +32,7 @@ export default async function VersionsPage({ params }: VersionsPageProps) {
       versions={versions.map((version) => ({
         id: version.id,
         label: version.label,
-        createdAt: version.createdAt.toISOString(),
+        createdAt: typeof version.createdAt === 'string' ? version.createdAt : (version.createdAt as any).toISOString(),
         snapshot: version.snapshot as any,
       }))}
     />

@@ -1,3 +1,62 @@
+# CV Builder# CV Builder
+
+
+
+This repository contains two separate projects that do not share a root package.json.Clean separation of frontend and backend. Each lives in its own folder with its own package.json and runs independently.
+
+
+
+- frontend/ — Next.js + TypeScript app## Structure
+
+- backend/ — NestJS + MongoDB API- frontend/ — Next.js + TypeScript app
+
+- backend/ — NestJS + MongoDB API
+
+## Setup
+
+## Setup
+
+Frontend
+
+- cd frontendFrontend
+
+- npm install- cd frontend
+
+- copy `.env.example` to `.env.local` and configure- npm install
+
+- npm run dev- Copy `.env.example` to `.env.local` and configure
+
+- npm run dev
+
+Backend
+
+- cd backendBackend
+
+- npm install- cd backend
+
+- copy `.env.example` to `.env` and configure- npm install
+
+- (optional) npm run seed- Copy `.env.example` to `.env` and configure
+
+- npm run start:dev- (optional) npm run seed
+
+- npm run start:dev
+
+## URLs
+
+- Frontend: http://localhost:3000## URLs
+
+- Backend API: http://localhost:3001/api- Frontend: http://localhost:3000
+
+- Backend API: http://localhost:3001/api
+
+Notes
+
+- Manage dependencies inside each project folder only.## Notes
+
+- Use two terminals when running both services locally.- Root workspaces removed; manage dependencies from each project folder.
+
+- Use two terminals for local development.
 # CV Builder 📄✨# CV Builder - Professional Resume Builder
 
 
@@ -156,267 +215,74 @@ npm run dev
 
 ```5. **Start the development server**
 
-   ```bash
+   # CV Builder
 
-**Access Points:**   npm run dev
+   A cleanly organized, two-project setup:
 
-- 🌐 **Frontend**: http://localhost:3000   ```
+   - Frontend: Next.js + TypeScript (in `frontend/`)
+   - Backend: NestJS + MongoDB (in `backend/`)
 
-- 🔧 **Backend API**: http://localhost:3001/api
+   Each project has its own `package.json` and runs independently. No root-level npm scripts are required.
 
-- 📚 **API Documentation**: http://localhost:3001/api/docs6. **Open your browser**
+   ## Getting Started
 
-   Navigate to [http://localhost:3000](http://localhost:3000)
+   Clone the repo and install dependencies per project:
 
-## 🔐 Test Credentials
+   Frontend
+   - Path: `frontend/`
+   - Install: run `npm install` inside `frontend`
+   - Dev: run `npm run dev` inside `frontend`
+   - Env file: create `frontend/.env.local` based on `frontend/.env.example`
 
-## 📖 Usage Guide
+   Backend
+   - Path: `backend/`
+   - Install: run `npm install` inside `backend`
+   - Dev: run `npm run start:dev` inside `backend`
+   - Seed: run `npm run seed` inside `backend` (optional, requires Mongo env)
+   - Env file: create `backend/.env` based on `backend/.env.example`
 
-Use these credentials to test the application:
+   ## Environment Variables
 
-### Getting Started
+   Frontend `.env.local`
+   - NEXTAUTH_SECRET=
+   - NEXTAUTH_URL=
+   - NEXT_PUBLIC_API_URL=
 
-- **Email**: `john.doe@example.com` | **Password**: `password123`1. **Sign up/Login**: Use the demo account (demo@cv-builder.com) or create your own
+   Backend `.env`
+   - MONGODB_URI=
+   - DATABASE_NAME=
+   - JWT_SECRET=
+   - PORT=3001
+   - NODE_ENV=development
+   - FRONTEND_URL=http://localhost:3000
 
-- **Email**: `jane.smith@example.com` | **Password**: `password123`2. **Create CV**: Click "Create New CV" from the dashboard
+   Refer to the example env files in each project for full details.
 
-3. **Choose Template**: Select from Classic, Modern, or Compact templates
+   ## Scripts Overview
 
-## 📋 Available Scripts4. **Edit Content**: Fill in your information using the intuitive editor
+   Frontend (run from `frontend/`):
+   - `npm run dev` - start Next.js dev server
+   - `npm run build` - build for production
+   - `npm start` - start production server
+   - `npm run lint` - lint the project
 
-5. **Customize Design**: Adjust colors, fonts, and layout options
+   Backend (run from `backend/`):
+   - `npm run start:dev` - start NestJS in watch mode
+   - `npm run build` - build backend
+   - `npm run start:prod` - start compiled server from `dist`
+   - `npm run lint` - lint the project
+   - `npm run seed` - seed MongoDB with demo data
 
-### Root Level Commands6. **Export PDF**: Download your CV as a professional PDF
+   ## Access Points
 
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:3001/api
 
+   ## Notes
 
-```bash### Dashboard Features
-
-npm run dev              # Start both frontend and backend- **My CVs**: View all your created CVs
-
-npm run build            # Build both projects- **Search & Filter**: Find CVs quickly
-
-npm run start            # Start production servers- **Quick Actions**: Edit, preview, export, or delete CVs
-
-npm run install:all      # Install all dependencies- **Public Sharing**: Generate shareable links for recruiters
-
-npm run lint             # Lint both projects
-
-npm run db:seed          # Seed database with sample data### Editor Guide
-
-```- **Sections**: Add/remove sections like Experience, Education, Skills, etc.
-
-- **Rich Text**: Use formatting options for descriptions and summaries
-
-### Individual Project Commands- **Drag & Drop**: Reorder sections by dragging
-
-- **Tech Stack**: Add technology badges to experience and projects
-
-```bash- **Auto-save**: Changes are saved automatically every few seconds
-
-# Frontend only
-
-npm run dev:frontend     # Start Next.js dev server## 🛠️ Tech Stack
-
-npm run build:frontend   # Build frontend for production
-
-npm run start:frontend   # Start frontend production server### Frontend
-
-- **Next.js 15** - React framework with App Router
-
-# Backend only  - **React 19** - UI library with latest features
-
-npm run dev:backend      # Start NestJS dev server- **TypeScript** - Type-safe development
-
-npm run build:backend    # Build backend for production- **Tailwind CSS** - Utility-first CSS framework
-
-npm run start:backend    # Start backend production server- **shadcn/ui** - Beautiful, accessible UI components
-
-```- **Zustand** - Lightweight state management
-
-- **TipTap** - Rich text editor
-
-## 🎯 Features- **React Hook Form** - Form handling with validation
-
-- **dnd-kit** - Drag and drop functionality
-
-### ✅ Currently Implemented
-
-### Backend
-
-- **🔐 Authentication System**- **Next.js API Routes** - Server-side API
-
-  - JWT-based authentication- **Prisma** - Database ORM with type safety
-
-  - User registration and login- **MongoDB** - NoSQL database
-
-  - Session management- **NextAuth.js** - Authentication solution
-
-- **Zod** - Schema validation
-
-- **📄 CV Management**- **@react-pdf/renderer** - Server-side PDF generation
-
-  - Create, read, update, delete CVs
-
-  - Multiple CV templates (Classic, Modern, Compact)### Development Tools
-
-  - Theme customization (colors, fonts, spacing)- **ESLint** - Code linting
-
-- **Prettier** - Code formatting
-
-- **📝 Rich Content Editing**- **TypeScript** - Type checking
-
-  - Inline text editing- **Prisma Studio** - Database GUI
-
-  - Multiple sections support (Experience, Education, Skills, etc.)
-
-  - Drag-and-drop section reordering## 📁 Project Structure
-
-
-
-- **🗄️ Database Integration**```
-
-  - MongoDB with native drivercv-builder/
-
-  - Comprehensive data models├── src/
-
-  - Sample data seeding│   ├── app/                    # Next.js App Router
-
-│   │   ├── (auth)/            # Authentication pages
-
-- **🎨 Modern UI/UX**│   │   ├── api/               # API routes
-
-  - Responsive design with Tailwind CSS│   │   ├── dashboard/         # Dashboard page
-
-  - shadcn/ui components│   │   ├── editor/            # CV editor
-
-  - Dark/light theme support│   │   └── preview/           # CV preview
-
-│   ├── components/            # React components
-
-- **📡 REST API**│   │   ├── ui/                # shadcn/ui components
-
-  - Full NestJS backend API│   │   ├── cv/                # CV-specific components
-
-  - OpenAPI/Swagger documentation│   │   └── editor/            # Editor components
-
-  - CORS configuration for frontend-backend communication│   └── lib/                   # Utilities and configurations
-
-│       ├── auth.ts            # NextAuth configuration
-
-### 🚧 Planned Features│       ├── db.ts              # Database connection
-
-│       ├── store.ts           # Zustand store
-
-- **📱 Frontend API Integration**│       ├── validations.ts     # Zod schemas
-
-  - Replace server actions with REST API calls│       └── pdf/               # PDF generation
-
-  - React Query for data management├── prisma/                    # Database schema and migrations
-
-  - Optimistic updates│   ├── schema.prisma          # Prisma schema
-
-│   └── seed.ts               # Database seeding
-
-- **📄 PDF Export**├── public/                    # Static assets
-
-  - Server-side PDF generation└── tailwind.config.ts        # Tailwind configuration
-
-  - Multiple export formats```
-
-  - Print-to-PDF client fallback
-
-## 🔧 Development
-
-- **🔗 Sharing & Collaboration**
-
-  - Public CV sharing### Available Scripts
-
-  - Share tokens and links
-
-  - Version management```bash
-
-# Development
-
-- **🎨 Advanced Customization**npm run dev          # Start development server
-
-  - Custom templatesnpm run build        # Build for production
-
-  - Advanced theme optionsnpm run start        # Start production server
-
-  - Section customization
-
-# Database
-
-## 🏗️ Project Structurenpm run db:push      # Push schema changes to database
-
-npm run db:studio    # Open Prisma Studio
-
-```npm run db:generate  # Generate Prisma client
-
-friendly-rotary-phone/npm run seed         # Seed database with demo data
-
-├── frontend/                 # Next.js application
-
-│   ├── src/# Code Quality
-
-│   │   ├── app/             # App Router pagesnpm run lint         # Run ESLint
-
-│   │   ├── components/      # React componentsnpm run format       # Format code with Prettier
-
-│   │   ├── lib/            # Utilities and configurationsnpm run type-check   # Run TypeScript type checking
-
-│   │   └── styles/         # Global styles```
-
-│   ├── package.json
-
-│   └── next.config.ts### Database Management
-
-├── backend/                 # NestJS API server
-
-│   ├── src/```bash
-
-│   │   ├── auth/           # Authentication module# Reset database
-
-│   │   ├── cvs/            # CV management modulenpx prisma db push --force-reset
-
-│   │   ├── users/          # User management modulenpm run seed
-
-│   │   ├── database/       # Database service and models
-
-│   │   └── main.ts         # Application entry point# View data
-
-│   ├── package.jsonnpm run db:studio
-
-│   └── nest-cli.json
-
-├── .github/# Generate types after schema changes
-
-│   └── instructions/       # Project instructionsnpm run db:generate
-
-├── package.json            # Workspace configuration```
-
-└── README.md              # This file
-
-```### Adding New Features
-
-
-
-## 🛠️ Technology Stack1. **New CV Section**: 
-
-   - Update Zod schema in `src/lib/validations.ts`
-
-### Frontend Technologies   - Add to CV templates in `src/components/cv/templates/`
-
-   - Create editor component in `src/components/editor/`
-
-- **Framework**: Next.js 15+ with App Router
-
-- **Language**: TypeScript2. **New Template**: 
-
-- **Styling**: Tailwind CSS   - Create template component in `src/components/cv/templates/`
-
-- **Components**: shadcn/ui   - Add to enum in `prisma/schema.prisma`
+   - Root-level `package.json` and monorepo workspaces were removed to keep frontend and backend fully separate.
+   - Use two terminals during development—one for the frontend and one for the backend.
+   - See each subfolder's README or comments for feature details and further docs.
 
 - **State Management**: Zustand + React Query   - Update CV renderer component
 

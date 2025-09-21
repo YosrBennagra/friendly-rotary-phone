@@ -118,7 +118,60 @@ export const useCVStore = create<CVStore>()(
         ...defaultData,
         ...data,
         summary: data.summary ?? { content: "" },
-      };
+        experience: (data.experience ?? []).map((e: any) => ({
+          company: e?.company ?? "",
+          role: e?.role ?? "",
+          startDate: e?.startDate ?? "",
+          endDate: e?.endDate ?? "",
+          location: e?.location ?? "",
+          bulletsRichText: e?.bulletsRichText ?? [""],
+          techStack: e?.techStack ?? [],
+          hidden: e?.hidden ?? false,
+        })),
+        education: (data.education ?? []).map((ed: any) => ({
+          school: ed?.school ?? "",
+          degree: ed?.degree ?? "",
+          startDate: ed?.startDate ?? "",
+          endDate: ed?.endDate ?? "",
+          detailsRichText: ed?.detailsRichText ?? "",
+          hidden: ed?.hidden ?? false,
+        })),
+        projects: (data.projects ?? []).map((p: any) => ({
+          name: p?.name ?? "",
+          link: p?.link ?? "",
+          descriptionRichText: p?.descriptionRichText ?? "",
+          bulletsRichText: p?.bulletsRichText ?? [],
+          techStack: p?.techStack ?? [],
+          hidden: p?.hidden ?? false,
+        })),
+        skills: { groups: (data.skills?.groups ?? []).map((g: any) => ({
+          name: g?.name ?? "",
+          items: g?.items ?? [],
+          hidden: g?.hidden ?? false,
+        })) },
+        certifications: (data.certifications ?? []).map((c: any) => ({
+          name: c?.name ?? "",
+          org: c?.org ?? "",
+          date: c?.date ?? "",
+          link: c?.link ?? "",
+          hidden: c?.hidden ?? false,
+        })),
+        languages: (data.languages ?? []).map((l: any) => ({
+          name: l?.name ?? "",
+          level: l?.level ?? "",
+          hidden: l?.hidden ?? false,
+        })),
+        interests: (data.interests ?? []).map((i: any) => i ?? ""),
+        customSections: (data.customSections ?? []).map((cs: any) => ({
+          title: cs?.title ?? "",
+          items: (cs?.items ?? []).map((it: any) => ({
+            label: it?.label ?? "",
+            valueRichText: it?.valueRichText ?? "",
+            hidden: it?.hidden ?? false,
+          })),
+          hidden: cs?.hidden ?? false,
+        })),
+      } as CVData;
 
       set({
         cvId: id,
@@ -140,7 +193,8 @@ export const useCVStore = create<CVStore>()(
     },
     updateArrayItem: (section, index, value) => {
       set((state) => {
-        const array = [...(state.data[section] as any[])];
+        const base = (state.data[section] as any[]) ?? [];
+        const array = [...base];
         array[index] = value;
         return {
           data: {
@@ -152,7 +206,8 @@ export const useCVStore = create<CVStore>()(
     },
     addArrayItem: (section, value) => {
       set((state) => {
-        const array = [...(state.data[section] as any[])];
+        const base = (state.data[section] as any[]) ?? [];
+        const array = [...base];
         array.push(value);
         return {
           data: {
@@ -164,7 +219,8 @@ export const useCVStore = create<CVStore>()(
     },
     removeArrayItem: (section, index) => {
       set((state) => {
-        const array = [...(state.data[section] as any[])];
+        const base = (state.data[section] as any[]) ?? [];
+        const array = [...base];
         array.splice(index, 1);
         return {
           data: {

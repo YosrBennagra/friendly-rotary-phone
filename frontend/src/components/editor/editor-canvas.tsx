@@ -117,7 +117,14 @@ export function EditorCanvas() {
     <Card key="experience" className="border-none shadow-none">
       <SectionHeading title="Experience" />
       <CardContent className="space-y-6">
-        {data.experience.map((item, index) => (
+        {(data.experience ?? []).map((rawItem, index) => {
+          const item = {
+            ...rawItem,
+            bulletsRichText: (rawItem?.bulletsRichText ?? []) as string[],
+            techStack: (rawItem?.techStack ?? []) as string[],
+            hidden: Boolean(rawItem?.hidden),
+          } as any;
+          return (
           <div key={index} className="rounded-md border border-dashed p-4">
             <div className="mb-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
               <InlineEditableText
@@ -152,13 +159,13 @@ export function EditorCanvas() {
               />
             </div>
             <div className="mt-3 space-y-2">
-              {item.bulletsRichText.map((bullet, bulletIndex) => (
+              {(item.bulletsRichText ?? []).map((bullet: string, bulletIndex: number) => (
                 <EditableRichText
                   key={bulletIndex}
                   value={bullet}
                   placeholder="Highlight an accomplishment"
                   onChange={(value) => {
-                    const bullets = [...item.bulletsRichText];
+                    const bullets = [...(item.bulletsRichText ?? [])];
                     bullets[bulletIndex] = value;
                     updateArrayItem("experience", index, { ...item, bulletsRichText: bullets });
                   }}
@@ -169,7 +176,7 @@ export function EditorCanvas() {
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  const bullets = [...item.bulletsRichText, ""];
+                  const bullets = [...(item.bulletsRichText ?? []), ""];
                   updateArrayItem("experience", index, { ...item, bulletsRichText: bullets });
                 }}
               >
@@ -178,30 +185,31 @@ export function EditorCanvas() {
             </div>
             <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
               <InlineEditableText
-                value={item.techStack.join(", ")}
+                value={(item.techStack ?? []).join(", ")}
                 placeholder="Tech stack (comma separated)"
                 onChange={(value) => updateArrayItem("experience", index, { ...item, techStack: value.split(",").map((entry) => entry.trim()).filter(Boolean) })}
               />
             </div>
             <SectionControls
               index={index}
-              total={data.experience.length}
+              total={(data.experience ?? []).length}
               hidden={Boolean(item.hidden)}
               onMoveUp={() => {
                 if (index === 0) return;
-                const next = moveItem(data.experience, index, index - 1);
+                const next = moveItem(data.experience ?? [], index, index - 1);
                 updateSection("experience", next as any);
               }}
               onMoveDown={() => {
-                if (index === data.experience.length - 1) return;
-                const next = moveItem(data.experience, index, index + 1);
+                const length = (data.experience ?? []).length;
+                if (index === length - 1) return;
+                const next = moveItem(data.experience ?? [], index, index + 1);
                 updateSection("experience", next as any);
               }}
               onRemove={() => removeArrayItem("experience", index)}
               onToggle={() => toggleItemVisibility("experience", index)}
             />
           </div>
-        ))}
+        );})}
         <Button
           variant="outline"
           onClick={() =>
@@ -290,6 +298,85 @@ export function EditorCanvas() {
     />
   );
 
+  const renderProjectItem = (rawItem: any, index: number) => {
+    const item = { bulletsRichText: [], techStack: [], hidden: false, ...rawItem } as any;
+    return (
+      <div className="space-y-2" key={index}>
+        <div className="flex flex-wrap gap-2 text-sm">
+          <InlineEditableText
+            value={item.name}
+            placeholder="Project name"
+            onChange={(value) => updateArrayItem("projects", index, { ...item, name: value })}
+            className="font-semibold"
+          />
+          <InlineEditableText
+            value={item.link ?? ""}
+            placeholder="Link"
+            onChange={(value) => updateArrayItem("projects", index, { ...item, link: value })}
+            className="text-muted-foreground"
+          />
+        </div>
+        <EditableRichText
+          value={item.descriptionRichText ?? ""}
+          placeholder="Project summary"
+          onChange={(value) => updateArrayItem("projects", index, { ...item, descriptionRichText: value })}
+        />
+        <div className="space-y-2">
+          {(item.bulletsRichText ?? []).map((bullet: string, bulletIndex: number) => (
+            <EditableRichText
+              key={bulletIndex}
+              value={bullet}
+              placeholder="Impact statement"
+              onChange={(value) => {
+                const bullets = [...(item.bulletsRichText ?? [])];
+                bullets[bulletIndex] = value;
+                updateArrayItem("projects", index, { ...item, bulletsRichText: bullets });
+              }}
+            />
+          ))}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const bullets = [...(item.bulletsRichText ?? []), ""];
+              updateArrayItem("projects", index, { ...item, bulletsRichText: bullets });
+            }}
+          >
+            <Plus className="mr-2 h-3 w-3" /> Add bullet
+          </Button>
+        </div>
+        <InlineEditableText
+          value={(item.techStack ?? []).join(", ")}
+          placeholder="Technologies"
+          onChange={(value) =>
+            updateArrayItem("projects", index, {
+              ...item,
+              techStack: value
+                .split(",")
+                .map((entry) => entry.trim())
+                .filter(Boolean),
+            })
+          }
+          className="text-xs text-muted-foreground"
+        />
+        <SectionControls
+          index={index}
+          total={data.projects.length}
+          hidden={Boolean(item.hidden)}
+          onMoveUp={() =>
+            index > 0 && updateSection("projects", moveItem(data.projects, index, index - 1) as any)
+          }
+          onMoveDown={() =>
+            index < data.projects.length - 1 &&
+            updateSection("projects", moveItem(data.projects, index, index + 1) as any)
+          }
+          onRemove={() => removeArrayItem("projects", index)}
+          onToggle={() => toggleItemVisibility("projects", index)}
+        />
+      </div>
+    );
+  };
+
   const renderProjects = () => (
     <RepeatingSection
       key="projects"
@@ -305,68 +392,7 @@ export function EditorCanvas() {
           techStack: [],
         })
       }
-      renderItem={(item, index) => (
-        <div className="space-y-2" key={index}>
-          <div className="flex flex-wrap gap-2 text-sm">
-            <InlineEditableText
-              value={item.name}
-              placeholder="Project name"
-              onChange={(value) => updateArrayItem("projects", index, { ...item, name: value })}
-              className="font-semibold"
-            />
-            <InlineEditableText
-              value={item.link ?? ""}
-              placeholder="Link"
-              onChange={(value) => updateArrayItem("projects", index, { ...item, link: value })}
-              className="text-muted-foreground"
-            />
-          </div>
-          <EditableRichText
-            value={item.descriptionRichText ?? ""}
-            placeholder="Project summary"
-            onChange={(value) => updateArrayItem("projects", index, { ...item, descriptionRichText: value })}
-          />
-          <div className="space-y-2">
-            {item.bulletsRichText.map((bullet, bulletIndex) => (
-              <EditableRichText
-                key={bulletIndex}
-                value={bullet}
-                placeholder="Impact statement"
-                onChange={(value) => {
-                  const bullets = [...item.bulletsRichText];
-                  bullets[bulletIndex] = value;
-                  updateArrayItem("projects", index, { ...item, bulletsRichText: bullets });
-                }}
-              />
-            ))}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                const bullets = [...item.bulletsRichText, ""];
-                updateArrayItem("projects", index, { ...item, bulletsRichText: bullets });
-              }}
-            >
-              <Plus className="mr-2 h-3 w-3" /> Add bullet
-            </Button>
-          </div>
-          <InlineEditableText
-            value={item.techStack.join(", ")}
-            placeholder="Technologies"
-            onChange={(value) => updateArrayItem("projects", index, { ...item, techStack: value.split(",").map((entry) => entry.trim()).filter(Boolean) })}
-            className="text-xs text-muted-foreground"
-          />
-          <SectionControls
-            index={index}
-            total={data.projects.length}
-            hidden={Boolean(item.hidden)}
-            onMoveUp={() => index > 0 && updateSection("projects", moveItem(data.projects, index, index - 1) as any)}
-            onMoveDown={() => index < data.projects.length - 1 && updateSection("projects", moveItem(data.projects, index, index + 1) as any)}
-            onRemove={() => removeArrayItem("projects", index)}
-            onToggle={() => toggleItemVisibility("projects", index)}
-          />
-        </div>
-      )}
+      renderItem={renderProjectItem}
     />
   );
 
@@ -374,7 +400,14 @@ export function EditorCanvas() {
     <Card key="skills" className="border-none shadow-none">
       <SectionHeading title="Skills" />
       <CardContent className="space-y-4">
-        {data.skills.groups.map((group, index) => (
+        {(data.skills?.groups ?? []).map((rawGroup, index) => {
+          const group = {
+            ...rawGroup,
+            name: rawGroup?.name ?? "",
+            items: (rawGroup?.items ?? []) as string[],
+            hidden: Boolean(rawGroup?.hidden),
+          } as any;
+          return (
           <div key={index} className="rounded-md border border-dashed p-4">
             <InlineEditableText
               value={group.name}
@@ -394,23 +427,24 @@ export function EditorCanvas() {
             />
             <SectionControls
               index={index}
-              total={data.skills.groups.length}
+              total={(data.skills?.groups ?? []).length}
               hidden={Boolean(group.hidden)}
               onMoveUp={() => {
                 if (index === 0) return;
-                const next = moveItem(data.skills.groups, index, index - 1);
+                const next = moveItem(data.skills?.groups ?? [], index, index - 1);
                 updateSection("skills", { groups: next });
               }}
               onMoveDown={() => {
-                if (index === data.skills.groups.length - 1) return;
-                const next = moveItem(data.skills.groups, index, index + 1);
+                const length = (data.skills?.groups ?? []).length;
+                if (index === length - 1) return;
+                const next = moveItem(data.skills?.groups ?? [], index, index + 1);
                 updateSection("skills", { groups: next });
               }}
               onRemove={() => removeSkillGroup(index)}
               onToggle={() => updateSkillGroup(index, { ...group, hidden: !group.hidden })}
             />
           </div>
-        ))}
+        );})}
         <Button variant="outline" onClick={() => addSkillGroup({ name: "", items: [] })}>
           <Plus className="mr-2 h-4 w-4" /> Add skill group
         </Button>
@@ -516,7 +550,7 @@ export function EditorCanvas() {
     <RepeatingSection
       key="interests"
       title="Interests"
-      items={data.interests.map((interest) => ({ value: interest }))}
+      items={(data.interests ?? []).map((interest) => ({ value: interest }))}
       onAdd={() => addArrayItem("interests", "")}
       renderItem={(item, index) => (
         <div key={index} className="flex items-center justify-between gap-2 text-sm">
@@ -558,13 +592,13 @@ export function EditorCanvas() {
             onChange={(value) => updateArrayItem("customSections", sectionIndex, { ...section, title: value })}
             className="font-semibold"
           />
-          {section.items.map((item, itemIndex) => (
+          {(section.items ?? []).map((item, itemIndex) => (
             <div key={itemIndex} className="rounded-md border border-dashed p-3">
               <InlineEditableText
                 value={item.label}
                 placeholder="Label"
                 onChange={(value) => {
-                  const items = [...section.items];
+                  const items = [...(section.items ?? [])];
                   items[itemIndex] = { ...item, label: value };
                   updateArrayItem("customSections", sectionIndex, { ...section, items });
                 }}
@@ -574,32 +608,33 @@ export function EditorCanvas() {
                 value={item.valueRichText ?? ""}
                 placeholder="Description"
                 onChange={(value) => {
-                  const items = [...section.items];
+                  const items = [...(section.items ?? [])];
                   items[itemIndex] = { ...item, valueRichText: value };
                   updateArrayItem("customSections", sectionIndex, { ...section, items });
                 }}
               />
               <SectionControls
                 index={itemIndex}
-                total={section.items.length}
+                total={(section.items ?? []).length}
                 hidden={Boolean(item.hidden)}
                 onMoveUp={() => {
                   if (itemIndex === 0) return;
-                  const items = moveItem(section.items, itemIndex, itemIndex - 1);
+                  const items = moveItem(section.items ?? [], itemIndex, itemIndex - 1);
                   updateArrayItem("customSections", sectionIndex, { ...section, items });
                 }}
                 onMoveDown={() => {
-                  if (itemIndex === section.items.length - 1) return;
-                  const items = moveItem(section.items, itemIndex, itemIndex + 1);
+                  const length = (section.items ?? []).length;
+                  if (itemIndex === length - 1) return;
+                  const items = moveItem(section.items ?? [], itemIndex, itemIndex + 1);
                   updateArrayItem("customSections", sectionIndex, { ...section, items });
                 }}
                 onRemove={() => {
-                  const items = [...section.items];
+                  const items = [...(section.items ?? [])];
                   items.splice(itemIndex, 1);
                   updateArrayItem("customSections", sectionIndex, { ...section, items });
                 }}
                 onToggle={() => {
-                  const items = [...section.items];
+                  const items = [...(section.items ?? [])];
                   items[itemIndex] = { ...item, hidden: !item.hidden };
                   updateArrayItem("customSections", sectionIndex, { ...section, items });
                 }}
@@ -611,7 +646,7 @@ export function EditorCanvas() {
             variant="ghost"
             size="sm"
             onClick={() => {
-              const items = [...section.items, { label: "", valueRichText: "" }];
+              const items = [...(section.items ?? []), { label: "", valueRichText: "" }];
               updateArrayItem("customSections", sectionIndex, { ...section, items });
             }}
           >
@@ -679,7 +714,7 @@ function RepeatingSection<T>({ title, items, renderItem, onAdd, addLabel }: Repe
     <Card className="border-none shadow-none">
       <SectionHeading title={title} />
       <CardContent className="space-y-4">
-        {items.map((item, index) => (
+        {(items ?? []).map((item, index) => (
           <div key={index} className="rounded-md border border-dashed p-4">
             {renderItem(item, index)}
           </div>

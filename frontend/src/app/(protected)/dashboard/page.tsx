@@ -8,10 +8,10 @@ export default async function DashboardPage() {
 
   const cvs = rawCvs.map((cv: any) => ({
     ...cv,
-    updatedAt: cv.updatedAt.toISOString(),
-    shareTokens: cv.shareTokens.map((token: any) => ({
+    updatedAt: typeof cv.updatedAt === 'string' ? cv.updatedAt : cv.updatedAt.toISOString(),
+    shareTokens: (cv.shareTokens || []).map((token: any) => ({
       ...token,
-      createdAt: token.createdAt.toISOString(),
+      createdAt: typeof token.createdAt === 'string' ? token.createdAt : token.createdAt.toISOString(),
     })),
   }));
 

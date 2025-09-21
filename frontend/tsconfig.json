@@ -28,13 +28,16 @@
                                                   ]
                                       }
                         },
-    "include":  [
+        "include":  [
                     "next-env.d.ts",
                     "next-auth.d.ts",
                     "**/*.ts",
                     "**/*.tsx",
                     ".next/types/**/*.ts"
                 ],
+        "types": [
+            "vitest/globals"
+        ],
     "exclude":  [
                     "node_modules"
                 ]

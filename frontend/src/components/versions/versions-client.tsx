@@ -82,7 +82,7 @@ export function VersionsClient({ cvId, current, versions }: VersionsClientProps)
 
   const handleRestore = (versionId: string) => {
     startTransition(async () => {
-      const result = await restoreVersionAction(versionId);
+      const result = await restoreVersionAction(cvId, versionId);
       if (!result.success) {
         toast({ title: "Restore failed", description: result.error });
         return;
@@ -113,7 +113,7 @@ export function VersionsClient({ cvId, current, versions }: VersionsClientProps)
         <CardContent className="flex flex-col gap-3 md:flex-row md:items-center">
           <Input
             value={label}
-            onChange={(event) => setLabel(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setLabel(event.target.value)}
             placeholder="Version label"
             className="md:max-w-sm"
           />
@@ -171,8 +171,8 @@ export function VersionsClient({ cvId, current, versions }: VersionsClientProps)
                 </div>
                 <div className="space-y-2 text-sm">
                   {sectionDiff.map((item) => (
-                    <div key={item.key} className="flex items-center justify-between rounded-md border px-3 py-2">
-                      <span className="font-medium text-foreground">{formatKey(item.key)}</span>
+                    <div key={String(item.key)} className="flex items-center justify-between rounded-md border px-3 py-2">
+                      <span className="font-medium text-foreground">{formatKey(String(item.key))}</span>
                       {item.changed ? (
                         <Badge variant="default">Changed</Badge>
                       ) : (
@@ -206,8 +206,8 @@ export function VersionsClient({ cvId, current, versions }: VersionsClientProps)
   );
 }
 
-function formatKey(key: keyof CVData | "template" | "theme") {
+function formatKey(key: string) {
   if (key === "template") return "Template";
   if (key === "theme") return "Theme";
-  return key.replace(/([A-Z])/g, " ").replace(/^./, (char) => char.toUpperCase());
+  return key.replace(/([A-Z])/g, " ").replace(/^./, (char: string) => char.toUpperCase());
 }

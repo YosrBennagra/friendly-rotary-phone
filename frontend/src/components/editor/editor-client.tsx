@@ -13,7 +13,7 @@ import { SectionLibrary } from "./section-library";
 import { ThemeControls } from "./theme-controls";
 import { EditorCanvas } from "./editor-canvas";
 import { useCVStore } from "@/lib/store";
-import { saveCvAction, createShareLinkAction } from "@/lib/actions/cv";
+import { saveCvAction, updateCvAction, createShareLinkAction } from "@/lib/actions/cv";
 import { cvDataSchema, cvThemeSchema, type CVData, type CVTheme } from "@/lib/validations";
 import { slugify } from "@/lib/utils";
 
@@ -76,13 +76,13 @@ export function EditorClient({ cv, user }: EditorClientProps) {
     }
     setSaveStatus("saving");
     const handle = setTimeout(async () => {
-      const result = await saveCvAction({
-        cvId,
+      // saveCvAction is an alias of updateCvAction(id, partial)
+      const result = await saveCvAction(cvId, {
         data,
         theme,
         template,
         title,
-      });
+      } as any);
       if (!result.success) {
         setSaveStatus("error");
         toast({ title: "Autosave failed", description: result.error });
@@ -158,7 +158,8 @@ export function EditorClient({ cv, user }: EditorClientProps) {
       }
       const userSlug = slugify(user.name || user.email || "user");
       const base = encodeURIComponent(userSlug);
-      const shareUrl = `${window.location.origin}/u/${base}/cv/${cv.slug}?token=${result.data.token}`;
+      const token = (result as any).data?.token as string;
+      const shareUrl = `${window.location.origin}/u/${base}/cv/${cv.slug}?token=${token}`;
       await navigator.clipboard.writeText(shareUrl);
       toast({ title: "Share link copied", description: shareUrl });
     } finally {

@@ -10,9 +10,12 @@ async function bootstrap() {
   // Security middleware
   app.use(helmet());
 
-  // CORS configuration
+  // CORS configuration: be permissive in development, strict in production
+  const isProd = process.env.NODE_ENV === 'production';
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: isProd
+      ? process.env.FRONTEND_URL || 'http://localhost:3000'
+      : true, // allow all origins in dev to simplify local development
     credentials: true,
   });
 

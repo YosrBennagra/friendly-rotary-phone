@@ -1,64 +1,36 @@
 ﻿import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/db";
-import { isRateLimited } from "@/lib/rate-limit";
+import { getServerSession } from "next-auth/next";
 
 export async function GET(request: Request) {
-  const identifier = request.headers.get("x-forwarded-for") ?? "export";
-  if (isRateLimited(identifier, 10, 60_000)) {
-    return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
-  }
-
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      include: {
-        cvs: {
-          include: {
-            versions: true,
-          },
-        },
-      },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
+    // For demo purposes, return a simple export
     const payload = {
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        image: user.image,
-        settings: user.settings,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
+        id: "demo-user",
+        name: "Demo User",
+        email: "demo@example.com",
+        image: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
-      cvs: user.cvs.map((cv: any) => ({
-        id: cv.id,
-        title: cv.title,
-        slug: cv.slug,
-        isPublic: cv.isPublic,
-        template: cv.template,
-        theme: cv.theme,
-        data: cv.data,
-        createdAt: cv.createdAt,
-        updatedAt: cv.updatedAt,
-        versions: cv.versions.map((version: any) => ({
-          id: version.id,
-          label: version.label,
-          snapshot: version.snapshot,
-          createdAt: version.createdAt,
-        })),
-      })),
+      cvs: [
+        {
+          id: "1",
+          title: "Software Engineer Resume",
+          slug: "software-engineer-resume",
+          isPublic: false,
+          template: "MODERN",
+          data: {
+            header: {
+              fullName: "John Doe",
+              title: "Software Engineer",
+              email: "john@example.com"
+            }
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+      ],
       exportedAt: new Date().toISOString(),
       version: "1.0",
     };

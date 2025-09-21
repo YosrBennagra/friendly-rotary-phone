@@ -32,6 +32,7 @@ export function EditableRichText({ value, placeholder = "Click to edit", onChang
     },
     content: value,
     editable: isEditing,
+    immediatelyRender: false,
     onUpdate: ({ editor }) => {
       setDraft(editor.getHTML());
     },
@@ -39,7 +40,8 @@ export function EditableRichText({ value, placeholder = "Click to edit", onChang
 
   React.useEffect(() => {
     if (editor && !isEditing) {
-      editor.commands.setContent(value, { emitUpdate: false });
+      // In TipTap v2, setContent's second arg is a boolean for emitUpdate
+      editor.commands.setContent(value, false);
       setDraft(value);
     }
   }, [editor, value, isEditing]);
@@ -59,7 +61,8 @@ export function EditableRichText({ value, placeholder = "Click to edit", onChang
   const cancelChanges = () => {
     setIsEditing(false);
     if (editor) {
-      editor.commands.setContent(value, { emitUpdate: false });
+      // Reset content without triggering onUpdate
+      editor.commands.setContent(value, false);
     }
   };
 

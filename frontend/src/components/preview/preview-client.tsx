@@ -25,7 +25,7 @@ interface PreviewClientProps {
 
 export function PreviewClient({ cv }: PreviewClientProps) {
   const printRef = React.useRef<HTMLDivElement | null>(null);
-  const handlePrint = useReactToPrint({ content: () => printRef.current });
+  const handlePrint = useReactToPrint({ contentRef: printRef });
 
   return (
     <div className="space-y-6">
