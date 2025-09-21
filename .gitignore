@@ -1,123 +1,242 @@
-# Dependencies# CV Builder Workspace - Monorepo .gitignore
+# Dependencies# Dependencies# CV Builder Workspace - Monorepo .gitignore
 
 node_modules/
 
+.pnpnode_modules/
+
+.pnp.js
+
 */node_modules/# Dependencies
 
-.pnp/node_modules
+# Testing
 
-.pnp.js/frontend/node_modules
+coverage/.pnp/node_modules
+
+*.lcov
+
+.nyc_output.pnp.js/frontend/node_modules
+
+*.tsbuildinfo
 
 /backend/node_modules
 
-# Production builds/.pnp
+# Build outputs
 
-build/.pnp.*
+.next/# Production builds/.pnp
+
+out/
+
+build/build/.pnp.*
+
+dist/
 
 dist/.yarn/*
 
-.next/!.yarn/patches
+# Environment variables
 
-out/!.yarn/plugins
+.env.next/!.yarn/patches
 
-!.yarn/releases
+.env.local
 
-# Environment variables!.yarn/versions
+.env.development.localout/!.yarn/plugins
 
-.env
+.env.test.local
 
-.env.local# Build outputs
+.env.production.local!.yarn/releases
 
-.env.development.local/frontend/.next/
+.env.*.local
 
-.env.test.local/frontend/out/
+frontend/.env# Environment variables!.yarn/versions
+
+frontend/.env.local
+
+frontend/.env.development.local.env
+
+frontend/.env.test.local  
+
+frontend/.env.production.local.env.local# Build outputs
+
+backend/.env
+
+backend/.env.local.env.development.local/frontend/.next/
+
+backend/.env.development.local
+
+backend/.env.test.local.env.test.local/frontend/out/
+
+backend/.env.production.local
 
 .env.production.local/backend/dist/
 
-/backend/build/
+# Runtime data
 
-# Logs
+pids/backend/build/
+
+*.pid
+
+*.seed# Logs
+
+*.pid.lock
 
 npm-debug.log*# Testing
 
-yarn-debug.log*/coverage
+# Logs
 
-yarn-error.log*/frontend/coverage
+logsyarn-debug.log*/coverage
 
-pnpm-debug.log*/backend/coverage
+*.log
+
+npm-debug.log*yarn-error.log*/frontend/coverage
+
+yarn-debug.log*
+
+yarn-error.log*pnpm-debug.log*/backend/coverage
 
 lerna-debug.log*
 
-# Environment files
+lerna-debug.log*
 
-# Runtime data.env*
+# Runtime
+
+.runtime# Environment files
+
+
+
+# Coverage# Runtime data.env*
+
+coverage/
 
 pidsfrontend/.env*
 
-*.pidbackend/.env*
+# nyc test coverage
 
-*.seed
+.nyc_output/*.pidbackend/.env*
+
+
+
+# Dependency directories*.seed
+
+node_modules/
 
 *.pid.lock# Logs
 
-npm-debug.log*
+# Optional npm cache directory
 
-# Coverage directory used by tools like istanbulyarn-debug.log*
+.npmnpm-debug.log*
+
+
+
+# Optional REPL history# Coverage directory used by tools like istanbulyarn-debug.log*
+
+.node_repl_history
 
 coverage/yarn-error.log*
 
-*.lcov.pnpm-debug.log*
+# Output of 'npm pack'
+
+*.tgz*.lcov.pnpm-debug.log*
 
 
+
+# Yarn Integrity file
+
+.yarn-integrity
 
 # nyc test coverage# Misc
 
-.nyc_output.DS_Store
+# parcel-bundler cache (https://parceljs.org/)
+
+.cache.nyc_output.DS_Store
+
+.parcel-cache
 
 *.pem
 
-# Dependency directories.vscode/
+# next.js build output
 
-jspm_packages/.idea/
+.next/# Dependency directories.vscode/
 
 
 
-# Optional npm cache directory# TypeScript
+# nuxt.js build outputjspm_packages/.idea/
+
+.nuxt
+
+dist
+
+
+
+# vuepress build output# Optional npm cache directory# TypeScript
+
+.vuepress/dist
 
 .npm*.tsbuildinfo
 
-frontend/next-env.d.ts
+# Serverless directories
 
-# Optional eslint cache
+.serverless/frontend/next-env.d.ts
+
+
+
+# FuseBox cache# Optional eslint cache
+
+.fusebox/
 
 .eslintcache# Vercel
 
-.vercel
+# DynamoDB Local files
 
-# Microbundle cache
+.dynamodb/.vercel
+
+
+
+# TernJS port file# Microbundle cache
+
+.tern-port
 
 .rpt2_cache/# Package lock files (keep main workspace lock)
 
-.rts2_cache_cjs//frontend/package-lock.json
+# IDE
 
-.rts2_cache_es//backend/package-lock.json
+.vscode/.rts2_cache_cjs//frontend/package-lock.json
+
+.idea/
+
+*.swp.rts2_cache_es//backend/package-lock.json
+
+*.swo
 
 .rts2_cache_umd/
 
-# Optional REPL history
-.node_repl_history
+# OS
 
-# Output of 'npm pack'
-*.tgz
+.DS_Store# Optional REPL history
+
+Thumbs.db.node_repl_history
+
+
+
+# Temporary files# Output of 'npm pack'
+
+*.tmp*.tgz
+
+*.temp
 
 # Yarn Integrity file
-.yarn-integrity
+
+# MongoData.yarn-integrity
+
+mongodata/
 
 # parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
 
-# Next.js build output
+# Certificates.cache
+
+*.pem.parcel-cache
+
+*.crt
+
+*.key# Next.js build output
 .next
 
 # Nuxt.js build / generate output
